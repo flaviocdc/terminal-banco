@@ -3,7 +3,6 @@ package br.ufrj.dcc.so.cliente;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
@@ -23,7 +22,7 @@ public class Cliente {
 	private boolean ocorreuErro = false;
 	private boolean desligar = false;
 	
-	private Scanner scanner;
+	private InterfaceCLI cli = new InterfaceCLI();
 	
 	public static void main(String[] args) {
 		LoggerUtil.initLog4j();
@@ -42,8 +41,6 @@ public class Cliente {
 		} catch (IOException e) {
 			logger.debug("Erro ao inicializar a conexao", e);
 		}
-		
-		scanner = new Scanner(System.in);
 	}
 	
 	private void loop() {
@@ -65,13 +62,9 @@ public class Cliente {
 		while (!desligar || !ocorreuErro) {
 			logger.debug("Esperando nova mensagem");
 			
-			String msg = scanner.nextLine();
-			if (msg.equals("close")) {
-				desligar = true;
-				continue;
-			}
+			Mensagem msg = cli.escolher();
 			
-			boolean enviado = enviarTexto(msg);
+			boolean enviado = enviar(msg);
 			
 			if (enviado) {
 				receber();
@@ -108,14 +101,11 @@ public class Cliente {
 
 	private boolean enviar(Mensagem msgObj) {
 		try {
-			String json = GsonUtil.gson().toJson(msgObj);
 			System.out.println(GsonUtil.gson().toJson(msgObj));
-			Mensagem obj2 = GsonUtil.gson().fromJson(json, Mensagem.class);
-			System.out.println(GsonUtil.gson().toJson(obj2));
 			
 			JsonWriter writer = GsonUtil.criarJsonWriter(clientSocket);
 			
-			GsonUtil.gson().toJson(obj2, Mensagem.class, writer);
+			GsonUtil.gson().toJson(msgObj, Mensagem.class, writer);
 			
 			writer.flush();
 		} catch (IOException e) {

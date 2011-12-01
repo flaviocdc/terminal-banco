@@ -21,7 +21,7 @@ public class MensagemBuilder {
 		return param("conteudo", valor);
 	}
 	
-	public MensagemBuilder param(String nome, String valor) {
+	public MensagemBuilder param(String nome, Object valor) {
 		parametros.put(nome, valor);
 		return this;
 	}
