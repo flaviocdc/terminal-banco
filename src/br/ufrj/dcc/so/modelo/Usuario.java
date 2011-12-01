@@ -21,6 +21,7 @@ public class Usuario {
 	private String senha;
 	
 	private transient Lock lock = new ReentrantLock();
+	private transient int contadorLogin = 0;
 	
 	private List<OperacaoFinaceira> operacoes;
 
@@ -48,6 +49,36 @@ public class Usuario {
 
 	public String getSenha() {
 		return senha;
+	}
+	
+	public boolean podeLogar() {
+		try {
+			lock.lock();
+			
+			return contadorLogin == 0;
+		} finally {
+			lock.unlock();
+		}
+	}
+	
+	public void logou() {
+		try {
+			lock.lock();
+			
+			contadorLogin++;
+		} finally {
+			lock.unlock();
+		}
+	}
+	
+	public void deslogou() {
+		try {
+			lock.lock();
+			
+			contadorLogin--;
+		} finally {
+			lock.unlock();
+		}
 	}
 	
 	public String getId() {

@@ -22,7 +22,7 @@ public class MensagemBuilder {
 	}
 	
 	public MensagemBuilder mensagem(String valor) {
-		return param("conteudo", valor);
+		return param("msg", valor);
 	}
 	
 	public MensagemBuilder param(String nome, Object valor) {

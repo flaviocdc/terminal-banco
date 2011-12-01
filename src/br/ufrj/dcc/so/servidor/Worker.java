@@ -54,8 +54,16 @@ public class Worker extends Thread {
 						autenticado = GerenciadorUsuarios.instance().verificarSenha(agencia, conta, senha);
 						usuarioAtual = GerenciadorUsuarios.instance().recuperarUsuario(agencia, conta);
 						
-						logger.debug("Autenticado!");
-						enviarMensagem(new MensagemBuilder().semErro().comando("authreply").mensagem("Autenticacao foi feita com sucesso!").criar());
+						if (usuarioAtual.podeLogar()) {
+							logger.debug("Autenticado!");
+							
+							usuarioAtual.logou();
+							
+							enviarMensagem(new MensagemBuilder().semErro().comando("authreply").mensagem("Autenticacao foi feita com sucesso!").criar());
+						} else {
+							logger.debug("Autenticado, mas numero maximo de conexoes excedidos");
+							enviarMensagem(new MensagemBuilder().comErro().comando("authlimit").mensagem("Autenticado, mas numero maximo de conexoes excedidos!").criar());
+						}
 						continue;
 					} else {
 						enviarMensagem(new MensagemBuilder().comErro().comando("authfail").mensagem("Nao autenticado, logar primeiro").criar());
@@ -92,6 +100,10 @@ public class Worker extends Thread {
 	
 	private void terminar() {
 		logger.debug("Terminando worker");
+		
+		if (usuarioAtual != null) {
+			usuarioAtual.deslogou();
+		}
 		
 		try {
 			clientSocket.close();

@@ -50,7 +50,11 @@ public class InterfaceCLI {
 		return opcao.gerarMensagem();		
 	}
 	
-	private Opcao instanciarOpcao(int opcao) {
+	public void exibirMensagem(String msg) {
+		console(msg);
+	}
+	
+	private static Opcao instanciarOpcao(int opcao) {
 		Class<?> clazz = opcoes[opcao - 1];
 		
 		try {

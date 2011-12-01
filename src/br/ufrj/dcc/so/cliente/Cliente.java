@@ -57,6 +57,9 @@ public class Cliente {
 		Mensagem loginResposta = receber();
 		if (loginResposta.isErro()) {
 			logger.debug("Login invalido!");
+			
+			cli.exibirMensagem(loginResposta.param("msg"));
+			
 			return;
 		}
 		
