@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import br.ufrj.dcc.so.modelo.Mensagem;
 import br.ufrj.dcc.so.modelo.MensagemBuilder;
+import br.ufrj.dcc.so.modelo.Usuario;
 import br.ufrj.dcc.so.util.GsonUtil;
 
 import com.google.gson.stream.JsonWriter;
