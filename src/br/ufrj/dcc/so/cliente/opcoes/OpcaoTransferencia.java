@@ -25,7 +25,7 @@ public class OpcaoTransferencia extends Opcao {
 	public Mensagem gerarMensagem() {
 		return new MensagemBuilder().semErro()
 									.mensagem("Transferencia")
-									.param("cmd", "transferencia")
+									.comando("transferencia")
 									.param("agencia", agencia)
 									.param("conta", conta)
 									.param("valor", valor)

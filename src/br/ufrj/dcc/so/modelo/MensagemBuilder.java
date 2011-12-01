@@ -17,6 +17,10 @@ public class MensagemBuilder {
 		return this;
 	}
 	
+	public MensagemBuilder comando(String cmd) {
+		return param("cmd", cmd);
+	}
+	
 	public MensagemBuilder mensagem(String valor) {
 		return param("conteudo", valor);
 	}

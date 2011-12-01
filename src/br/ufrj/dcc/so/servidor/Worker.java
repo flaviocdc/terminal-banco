@@ -55,15 +55,15 @@ public class Worker extends Thread {
 						usuarioAtual = GerenciadorUsuarios.instance().recuperarUsuario(agencia, conta);
 						
 						logger.debug("Autenticado!");
-						enviarMensagem(new MensagemBuilder().semErro().mensagem("Autenticacao foi feita com sucesso!").criar());
+						enviarMensagem(new MensagemBuilder().semErro().comando("authreply").mensagem("Autenticacao foi feita com sucesso!").criar());
 						continue;
 					} else {
-						enviarMensagem(new MensagemBuilder().comErro().mensagem("Nao autenticado, logar primeiro").criar());
+						enviarMensagem(new MensagemBuilder().comErro().comando("authfail").mensagem("Nao autenticado, logar primeiro").criar());
 						continue;
 					}
 				}
 				
-				enviarMensagem(new Mensagem("Recebida!"));
+				enviarMensagem(new MensagemBuilder().semErro().comando("cmdreply").mensagem("Mensagem recebida").criar());
 			} catch (IOException e) {
 				logger.error("Erro ao ler mensagem", e);
 				break;

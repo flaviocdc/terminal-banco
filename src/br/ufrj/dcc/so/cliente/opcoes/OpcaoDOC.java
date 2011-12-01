@@ -28,8 +28,8 @@ public class OpcaoDOC extends Opcao {
 	@Override
 	public Mensagem gerarMensagem() {
 		return new MensagemBuilder().semErro()
-									.mensagem("Transferencia")
-									.param("cmd", "transferencia")
+									.mensagem("DOC")
+									.comando("doc")
 									.param("banco", banco)
 									.param("agencia", agencia)
 									.param("conta", conta)

@@ -46,8 +46,8 @@ public class Cliente {
 	private void loop() {
 		
 		Mensagem loginMsg = new MensagemBuilder().semErro()
+    										  .comando("login")
 											  .mensagem("Autenticar")
-											  .param("cmd", "login")
 											  .param("agencia", "1234-0")
 											  .param("conta", "0000-1")
 											  .param("senha", "123456")
@@ -93,7 +93,8 @@ public class Cliente {
 	public boolean enviarTexto(String msg) {
 		logger.debug("Enviando mensagem '" + msg + "' para o servidor");
 
-		Mensagem msgObj = new MensagemBuilder().mensagem(msg)
+		Mensagem msgObj = new MensagemBuilder().comando("textmsg")
+											   .mensagem(msg)
 											   .semErro()
 											   .criar();
 		
@@ -102,8 +103,6 @@ public class Cliente {
 
 	private boolean enviar(Mensagem msgObj) {
 		try {
-			System.out.println(GsonUtil.gson().toJson(msgObj));
-			
 			JsonWriter writer = GsonUtil.criarJsonWriter(clientSocket);
 			
 			GsonUtil.gson().toJson(msgObj, Mensagem.class, writer);

@@ -8,17 +8,8 @@ public class Mensagem {
 	private Map<String, Object> parametros;
 
 	public Mensagem() {
-		this(false, "");
-	}
-	
-	public Mensagem(boolean erro, String conteudo) {
 		parametros = new HashMap<String, Object>();
-		parametros.put("conteudo", conteudo);
-		parametros.put("erro", erro);
-	}
-
-	public Mensagem(String conteudo) {
-		this(false, conteudo);
+		parametros.put("erro", false);
 	}
 
 	public boolean isErro() {
@@ -33,14 +24,6 @@ public class Mensagem {
 		parametros.put("erro", erro);
 	}
 	
-	public String getConteudo() {
-		return param("conteudo");
-	}
-	
-	public void setConteudo(String conteudo) {
-		parametros.put("conteudo", conteudo);
-	}
-
 	protected Map<String, Object> getParametros() {
 		return parametros;
 	}

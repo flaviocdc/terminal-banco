@@ -16,7 +16,8 @@ public class OpcaoSaque extends Opcao {
 	@Override
 	public Mensagem gerarMensagem() {
 		return new MensagemBuilder().semErro()
-									.mensagem("Transferencia")
+									.mensagem("Saque")
+									.comando("saque")
 									.param("cmd", "transferencia")
 									.param("valor", valor)
 									.criar();

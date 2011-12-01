@@ -16,8 +16,8 @@ public class OpcaoDeposito extends Opcao {
 	@Override
 	public Mensagem gerarMensagem() {
 		return new MensagemBuilder().semErro()
-									.mensagem("Transferencia")
-									.param("cmd", "transferencia")
+									.mensagem("Deposito")
+									.comando("deposito")
 									.param("valor", valor)
 									.criar();
 	}
