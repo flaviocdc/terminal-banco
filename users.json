@@ -1,0 +1,86 @@
+{
+  "1234-0|0000-1": {
+    "nome": "Flavio",
+    "agencia": "1234-0",
+    "conta": "0000-1",
+    "senha": "123456",
+    "operacoes": [
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": -10.0,
+        "tipo": "DOC"
+      },
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": -10.0,
+        "tipo": "TRANSFERENCIA"
+      },
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": -10.0,
+        "tipo": "SAQUE"
+      },
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": 150.0,
+        "tipo": "DEPOSITO"
+      }
+    ]
+  },
+  "1234-0|0000-3": {
+    "nome": "Augusto",
+    "agencia": "1234-0",
+    "conta": "0000-3",
+    "senha": "123456",
+    "operacoes": [
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": -10.0,
+        "tipo": "DOC"
+      },
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": -10.0,
+        "tipo": "TRANSFERENCIA"
+      },
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": -10.0,
+        "tipo": "SAQUE"
+      },
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": 150.0,
+        "tipo": "DEPOSITO"
+      }
+    ]
+  },
+  "1234-0|0000-2": {
+    "nome": "Magno",
+    "agencia": "1234-0",
+    "conta": "0000-2",
+    "senha": "123456",
+    "operacoes": [
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": -10.0,
+        "tipo": "DOC"
+      },
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": -10.0,
+        "tipo": "TRANSFERENCIA"
+      },
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": -10.0,
+        "tipo": "SAQUE"
+      },
+      {
+        "data": "Dec 1, 2011 8:41:56 PM",
+        "valor": 150.0,
+        "tipo": "DEPOSITO"
+      }
+    ]
+  }
+}

@@ -37,7 +37,7 @@ public class Cliente {
 		clientSocket = new Socket();
 		
 		try {
-			clientSocket.connect(new InetSocketAddress("127.0.0.1", 1234));
+			clientSocket.connect(new InetSocketAddress("0.0.0.0", 1234));
 		} catch (IOException e) {
 			logger.debug("Erro ao inicializar a conexao", e);
 		}
@@ -48,8 +48,9 @@ public class Cliente {
 		Mensagem loginMsg = new MensagemBuilder().semErro()
 											  .mensagem("Autenticar")
 											  .param("cmd", "login")
-											  .param("login", "123")
-											  .param("senha", "flavio")
+											  .param("agencia", "1234-0")
+											  .param("conta", "0000-1")
+											  .param("senha", "123456")
 											  .criar();
 		
 		enviar(loginMsg);

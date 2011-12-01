@@ -20,6 +20,7 @@ public class Worker extends Thread {
 	private int clientId;
 	
 	private boolean autenticado;
+	private Usuario usuarioAtual;
 	
 	public Worker(int paramClientId, Socket paramClientSocket) {
 		clientId = paramClientId;
@@ -45,12 +46,14 @@ public class Worker extends Thread {
 				if (!autenticado) {
 					String cmd = msg.param("cmd");
 					if (cmd != null && cmd.equals("login")) {
-						String login = msg.param("login");
+						String agencia = msg.param("agencia");
+						String conta = msg.param("conta");
+
 						String senha = msg.param("senha");
 						
-						// TODO validar
+						autenticado = GerenciadorUsuarios.instance().verificarSenha(agencia, conta, senha);
+						usuarioAtual = GerenciadorUsuarios.instance().recuperarUsuario(agencia, conta);
 						
-						autenticado = true;
 						logger.debug("Autenticado!");
 						enviarMensagem(new MensagemBuilder().semErro().mensagem("Autenticacao foi feita com sucesso!").criar());
 						continue;

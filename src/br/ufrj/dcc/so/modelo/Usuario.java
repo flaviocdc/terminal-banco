@@ -18,10 +18,21 @@ public class Usuario {
 	
 	private String agencia;
 	private String conta;
+	private String senha;
 	
 	private transient Lock lock = new ReentrantLock();
 	
 	private List<OperacaoFinaceira> operacoes;
+
+	public Usuario() {
+	}
+	
+	public Usuario(String nome, String agencia, String conta, String senha) {
+		this.nome = nome;
+		this.agencia = agencia;
+		this.conta = conta;
+		this.senha = senha;
+	}
 
 	public String getNome() {
 		return nome;
@@ -35,8 +46,30 @@ public class Usuario {
 		return conta;
 	}
 
+	public String getSenha() {
+		return senha;
+	}
+	
+	public String getId() {
+		return gerarIdUsuario(this);
+	}
+
+	public static String gerarIdUsuario(Usuario usuario) {
+		return gerarIdUsuario(usuario.agencia, usuario.conta);
+	}
+	
+	public static String gerarIdUsuario(String agencia, String conta) {
+		return agencia + "|" + conta;
+	}
+
 	public List<OperacaoFinaceira> getOperacoes() {
-		return Collections.unmodifiableList(operacoes);
+		try {
+			lock.lock();
+			
+			return Collections.unmodifiableList(operacoes);
+		} finally {
+			lock.unlock();
+		}
 	}
 	
 	protected void setOperacoes(List<OperacaoFinaceira> operacoes) {
@@ -44,11 +77,17 @@ public class Usuario {
 	}
 
 	public double saldo() {
-		double saldo = 0.0;
-		for (OperacaoFinaceira op : operacoes) {
-			saldo += op.getValor();
+		try {
+			lock.lock();
+			
+			double saldo = 0.0;
+			for (OperacaoFinaceira op : operacoes) {
+				saldo += op.getValor();
+			}
+			return saldo;
+		} finally {
+			lock.unlock();
 		}
-		return saldo;
 	}
 	
 	public void adicionarOperacao(OperacaoFinaceira op) {

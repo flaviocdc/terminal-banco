@@ -5,8 +5,6 @@ import static junit.framework.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.testng.annotations.Test;
 
 import br.ufrj.dcc.so.modelo.OperacaoFinaceira.Tipo;
