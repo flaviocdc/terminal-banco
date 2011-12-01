@@ -20,6 +20,9 @@ public class Cliente {
 	private PrintWriter out;
 	private BufferedReader in;
 	
+	private boolean ocorreuErro = false;
+	private boolean desligar = false;
+	
 	private Scanner scanner;
 	
 	public static void main(String[] args) {
@@ -45,6 +48,8 @@ public class Cliente {
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		} catch (IOException e) {
 			logger.error("Erro ao inicializar streams", e);
+			
+			ocorreuErro = true;
 		}
 		
 		scanner = new Scanner(System.in);
@@ -52,34 +57,47 @@ public class Cliente {
 	
 	private void loop() {
 		String cmd = null;
-		String response = null;
 		
-		while (true) {
+		while (!desligar || !ocorreuErro) {
 			logger.debug("Esperando novo comando");
 			
 			cmd = scanner.nextLine();
 			if (cmd.equals("close")) {
-				terminar();
-				break;
+				desligar = true;
+				continue;
 			}
 			
-			logger.debug("Enviando comando '" + cmd + "' para o servidor");
-			out.println(cmd);
-			out.flush();
+			enviar(cmd);
 			
-			logger.debug("Esperando resposta");
-			response = null;
-			try {
-				response = in.readLine();
-				logger.debug("Resposta do servidor: " + response);
-			} catch (IOException e) {
-				logger.error("Erro esperando pela resposta do servidor", e);
-				
-				terminar();
-				break;
-			}
-			
+			receber();
 		}
+		
+		terminar();
+	}
+
+	public String receber() {
+		String response = null;
+		
+		try {
+			logger.debug("Esperando resposta");
+
+			response = in.readLine();
+			logger.debug("Resposta do servidor: " + response);
+		} catch (IOException e) {
+			logger.error("Erro esperando pela resposta do servidor", e);
+			
+			ocorreuErro = true;
+			return null;
+		}
+		
+		return response;
+	}
+	
+	public void enviar(String cmd) {
+		logger.debug("Enviando comando '" + cmd + "' para o servidor");
+		
+		out.println(cmd);
+		out.flush();
 	}
 
 	private void terminar() {
