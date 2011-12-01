@@ -11,9 +11,9 @@ import br.ufrj.dcc.so.cliente.opcoes.OpcaoSaque;
 import br.ufrj.dcc.so.cliente.opcoes.OpcaoTransferencia;
 import br.ufrj.dcc.so.modelo.Mensagem;
 
-public class InterfaceCLI {
+public class CLI {
 
-	private static final Logger logger = Logger.getLogger(InterfaceCLI.class);
+	private static final Logger logger = Logger.getLogger(CLI.class);
 	
 	private Scanner in = new Scanner(System.in);
 

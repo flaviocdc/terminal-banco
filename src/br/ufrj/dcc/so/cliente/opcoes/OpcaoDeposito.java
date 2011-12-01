@@ -1,6 +1,6 @@
 package br.ufrj.dcc.so.cliente.opcoes;
 
-import br.ufrj.dcc.so.cliente.InterfaceCLI;
+import br.ufrj.dcc.so.cliente.CLI;
 import br.ufrj.dcc.so.modelo.Mensagem;
 import br.ufrj.dcc.so.modelo.MensagemBuilder;
 
@@ -9,7 +9,7 @@ public class OpcaoDeposito extends Opcao {
 	
 	@Override
 	public void receberParametros() {
-		InterfaceCLI.console("Digite o valor:");
+		CLI.console("Digite o valor:");
 		valor = in.nextFloat();
 	}
 

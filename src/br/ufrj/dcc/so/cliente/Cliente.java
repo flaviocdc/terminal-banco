@@ -22,7 +22,7 @@ public class Cliente {
 	private boolean ocorreuErro = false;
 	private boolean desligar = false;
 	
-	private InterfaceCLI cli = new InterfaceCLI();
+	private CLI cli = new CLI();
 	
 	public static void main(String[] args) {
 		LoggerUtil.initLog4j();

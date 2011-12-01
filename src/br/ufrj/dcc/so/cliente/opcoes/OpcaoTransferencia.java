@@ -1,6 +1,6 @@
 package br.ufrj.dcc.so.cliente.opcoes;
 
-import br.ufrj.dcc.so.cliente.InterfaceCLI;
+import br.ufrj.dcc.so.cliente.CLI;
 import br.ufrj.dcc.so.modelo.Mensagem;
 import br.ufrj.dcc.so.modelo.MensagemBuilder;
 
@@ -11,13 +11,13 @@ public class OpcaoTransferencia extends Opcao {
 	
 	@Override
 	public void receberParametros() {
-		InterfaceCLI.console("Digite a agencia:");
+		CLI.console("Digite a agencia:");
 		agencia = in.nextLine();
 		
-		InterfaceCLI.console("Digite a conta de destino:");
+		CLI.console("Digite a conta de destino:");
 		conta = in.nextLine();
 		
-		InterfaceCLI.console("Digite o valor:");
+		CLI.console("Digite o valor:");
 		valor = in.nextFloat();
 	}
 
