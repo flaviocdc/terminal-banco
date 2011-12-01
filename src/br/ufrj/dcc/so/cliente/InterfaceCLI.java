@@ -4,8 +4,12 @@ import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
+import br.ufrj.dcc.so.cliente.opcoes.Opcao;
+import br.ufrj.dcc.so.cliente.opcoes.OpcaoDOC;
+import br.ufrj.dcc.so.cliente.opcoes.OpcaoDeposito;
+import br.ufrj.dcc.so.cliente.opcoes.OpcaoSaque;
+import br.ufrj.dcc.so.cliente.opcoes.OpcaoTransferencia;
 import br.ufrj.dcc.so.modelo.Mensagem;
-import br.ufrj.dcc.so.modelo.MensagemBuilder;
 
 public class InterfaceCLI {
 
@@ -14,7 +18,10 @@ public class InterfaceCLI {
 	private Scanner in = new Scanner(System.in);
 
 	private static Class<?>[] opcoes = {
-		OpcaoTransferencia.class
+		OpcaoTransferencia.class,
+		OpcaoDOC.class,
+		OpcaoSaque.class,
+		OpcaoDeposito.class
 	};
 	
 	public static void console(String line) {
@@ -49,41 +56,8 @@ public class InterfaceCLI {
 		try {
 			return (Opcao) clazz.newInstance();
 		} catch (Exception e) {
-			e.printStackTrace();
-			//logger.debug("Impossivel executar opcao " + opcao, e);
+			logger.debug("Impossivel executar opcao " + opcao, e);
 			return null;
 		}
-	}
-	
-	private abstract static class Opcao {
-		protected Scanner in = new Scanner(System.in);
-		
-		public abstract void receberParametros();
-		public abstract Mensagem gerarMensagem();
-	}
-	
-	public static class OpcaoTransferencia extends Opcao {
-		private String conta;
-		private float valor;
-		
-		@Override
-		public void receberParametros() {
-			console("Digite a conta de destino:");
-			conta = in.nextLine();
-			
-			console("Digite o valor:");
-			valor = in.nextFloat();
-		}
-
-		@Override
-		public Mensagem gerarMensagem() {
-			return new MensagemBuilder().semErro()
-										.mensagem("Transferencia")
-										.param("cmd", "transferencia")
-										.param("conta", conta)
-										.param("valor", valor)
-										.criar();
-		}
-		
 	}
 }

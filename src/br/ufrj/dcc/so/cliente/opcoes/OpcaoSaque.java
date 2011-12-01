@@ -1,0 +1,24 @@
+package br.ufrj.dcc.so.cliente.opcoes;
+
+import br.ufrj.dcc.so.cliente.InterfaceCLI;
+import br.ufrj.dcc.so.modelo.Mensagem;
+import br.ufrj.dcc.so.modelo.MensagemBuilder;
+
+public class OpcaoSaque extends Opcao {
+	private float valor;
+	
+	@Override
+	public void receberParametros() {
+		InterfaceCLI.console("Digite o valor:");
+		valor = in.nextFloat();
+	}
+
+	@Override
+	public Mensagem gerarMensagem() {
+		return new MensagemBuilder().semErro()
+									.mensagem("Transferencia")
+									.param("cmd", "transferencia")
+									.param("valor", valor)
+									.criar();
+	}
+}
