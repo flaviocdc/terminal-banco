@@ -25,9 +25,6 @@ public class Cliente {
 	
 	private Socket clientSocket;
 	
-	private BufferedWriter out;
-	private BufferedReader in;
-	
 	private JsonWriter jsonWriter;
 	private JsonReader jsonReader;
 	
@@ -55,16 +52,13 @@ public class Cliente {
 		}
 		
 		try {
-			out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			jsonWriter = new JsonWriter(new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream())));
+			jsonReader = new JsonReader( new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
 		} catch (IOException e) {
 			logger.error("Erro ao inicializar streams", e);
 			
 			ocorreuErro = true;
 		}
-		
-		jsonWriter = new JsonWriter(out);
-		jsonReader = new JsonReader(in);
 		
 		scanner = new Scanner(System.in);
 	}

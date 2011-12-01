@@ -25,22 +25,16 @@ public class Worker extends Thread {
 	private JsonWriter jsonWriter;
 	private JsonReader jsonReader;
 	
-	private BufferedWriter out;
-	private BufferedReader in;
-	
 	public Worker(int paramClientId, Socket paramClientSocket) {
 		clientId = paramClientId;
 		clientSocket = paramClientSocket;
 		
 		try {
-			out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			jsonWriter = new JsonWriter(new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream())));
+			jsonReader = new JsonReader(new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
 		} catch (IOException e) {
 			logger.error("Problema ao inicial stream de comunicacao", e);
 		}
-		
-		jsonWriter = new JsonWriter(out);
-		jsonReader = new JsonReader(in);
 		
 		setName("Worker-" + clientId);
 	}
