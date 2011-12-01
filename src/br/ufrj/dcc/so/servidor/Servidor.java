@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 
-import br.ufrj.dcc.so.log.Log4jHelper;
+import br.ufrj.dcc.so.util.LoggerUtil;
 
 public class Servidor {
 
@@ -18,7 +18,7 @@ public class Servidor {
 	private AtomicInteger currentClientId = new AtomicInteger(0);
 	
 	public static void main(String[] args) {
-		Log4jHelper.initLog4j();
+		LoggerUtil.initLog4j();
 		
 		Servidor servidor = new Servidor();
 		
