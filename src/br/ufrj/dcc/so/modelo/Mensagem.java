@@ -34,7 +34,7 @@ public class Mensagem {
 	}
 	
 	public String getConteudo() {
-		return (String) parametros.get("conteudo");
+		return param("conteudo");
 	}
 	
 	public void setConteudo(String conteudo) {
@@ -47,6 +47,10 @@ public class Mensagem {
 
 	protected void setParametros(Map<String, Object> parametros) {
 		this.parametros = parametros;
+	}
+	
+	public String param(String param) {
+		return (String) parametros.get(param);
 	}
 
 	@Override

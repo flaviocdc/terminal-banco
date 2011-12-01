@@ -1,18 +1,14 @@
 package br.ufrj.dcc.so.servidor;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import org.apache.log4j.Logger;
 
 import br.ufrj.dcc.so.modelo.Mensagem;
+import br.ufrj.dcc.so.modelo.MensagemBuilder;
 import br.ufrj.dcc.so.util.GsonUtil;
 
-import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 public class Worker extends Thread {
@@ -22,19 +18,11 @@ public class Worker extends Thread {
 	private Socket clientSocket;
 	private int clientId;
 	
-	private JsonWriter jsonWriter;
-	private JsonReader jsonReader;
+	private boolean autenticado;
 	
 	public Worker(int paramClientId, Socket paramClientSocket) {
 		clientId = paramClientId;
 		clientSocket = paramClientSocket;
-		
-		try {
-			jsonWriter = new JsonWriter(new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream())));
-			jsonReader = new JsonReader(new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
-		} catch (IOException e) {
-			logger.error("Problema ao inicial stream de comunicacao", e);
-		}
 		
 		setName("Worker-" + clientId);
 	}
@@ -53,9 +41,25 @@ public class Worker extends Thread {
 				
 				logger.debug("Mensagem recebida: '" + msg + "'");
 				
-				GsonUtil.gson().toJson(new Mensagem("Recebida!"), Mensagem.class, jsonWriter);
+				if (!autenticado) {
+					String cmd = msg.param("cmd");
+					if (cmd != null && cmd.equals("login")) {
+						String login = msg.param("login");
+						String senha = msg.param("senha");
+						
+						// TODO validar
+						
+						autenticado = true;
+						logger.debug("Autenticado!");
+						enviarMensagem(new MensagemBuilder().semErro().mensagem("Autenticacao foi feita com sucesso!").criar());
+						continue;
+					} else {
+						enviarMensagem(new MensagemBuilder().comErro().mensagem("Nao autenticado, logar primeiro").criar());
+						continue;
+					}
+				}
 				
-				jsonWriter.flush();
+				enviarMensagem(new Mensagem("Recebida!"));
 			} catch (IOException e) {
 				logger.error("Erro ao ler mensagem", e);
 				break;
@@ -65,17 +69,21 @@ public class Worker extends Thread {
 		terminar();
 	}
 
-	private Mensagem lerMensagem() throws IOException {
-		Mensagem msg = new Mensagem();
+	private void enviarMensagem(Mensagem msgObj) throws IOException {
+		JsonWriter writer = GsonUtil.criarJsonWriter(clientSocket);
 		
+		GsonUtil.gson().toJson(msgObj, Mensagem.class, writer);
+
+		writer.flush();
+	}
+
+	private Mensagem lerMensagem() throws IOException {
 		try {
-			GsonUtil.gson().fromJson(jsonReader, Mensagem.class);
+			return GsonUtil.gson().fromJson(GsonUtil.criarJsonReader(clientSocket), Mensagem.class);
 		} catch (Exception e) {
 			logger.error("Erro ao ler mensagem.", e);
 			return null;
 		}
-		
-		return msg;
 	}
 	
 	private void terminar() {

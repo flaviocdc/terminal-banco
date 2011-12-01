@@ -1,10 +1,6 @@
 package br.ufrj.dcc.so.cliente;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Scanner;
@@ -16,7 +12,6 @@ import br.ufrj.dcc.so.modelo.MensagemBuilder;
 import br.ufrj.dcc.so.util.GsonUtil;
 import br.ufrj.dcc.so.util.LoggerUtil;
 
-import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 public class Cliente {
@@ -24,9 +19,6 @@ public class Cliente {
 	private static final Logger logger = Logger.getLogger(Cliente.class);
 	
 	private Socket clientSocket;
-	
-	private JsonWriter jsonWriter;
-	private JsonReader jsonReader;
 	
 	private boolean ocorreuErro = false;
 	private boolean desligar = false;
@@ -51,60 +43,81 @@ public class Cliente {
 			logger.debug("Erro ao inicializar a conexao", e);
 		}
 		
-		try {
-			jsonWriter = new JsonWriter(new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream())));
-			jsonReader = new JsonReader( new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
-		} catch (IOException e) {
-			logger.error("Erro ao inicializar streams", e);
-			
-			ocorreuErro = true;
-		}
-		
 		scanner = new Scanner(System.in);
 	}
 	
 	private void loop() {
-		String msg = null;
+		
+		Mensagem loginMsg = new MensagemBuilder().semErro()
+											  .mensagem("Autenticar")
+											  .param("cmd", "login")
+											  .param("login", "123")
+											  .param("senha", "flavio")
+											  .criar();
+		
+		enviar(loginMsg);
+		Mensagem loginResposta = receber();
+		if (loginResposta.isErro()) {
+			logger.debug("Login invalido!");
+			return;
+		}
 		
 		while (!desligar || !ocorreuErro) {
 			logger.debug("Esperando nova mensagem");
 			
-			msg = scanner.nextLine();
+			String msg = scanner.nextLine();
 			if (msg.equals("close")) {
 				desligar = true;
 				continue;
 			}
 			
-			boolean enviado = enviar(msg);
+			boolean enviado = enviarTexto(msg);
 			
-			if (enviado)
+			if (enviado) {
 				receber();
+			}
 		}
 		
 		terminar();
 	}
 
 	public Mensagem receber() {
-		logger.debug("Esperando resposta");
-
-		Mensagem response = GsonUtil.gson().fromJson(jsonReader, Mensagem.class);
-		
-		logger.debug("Resposta do servidor: " + response);
-		
-		return response;
+		try {
+			logger.debug("Esperando resposta");
+	
+			Mensagem response = GsonUtil.gson().fromJson(GsonUtil.criarJsonReader(clientSocket), Mensagem.class);
+			
+			logger.debug("Resposta do servidor: " + response);
+			
+			return response;
+		} catch (Exception e) {
+			ocorreuErro = true;
+			return null;
+		}
 	}
 	
-	public boolean enviar(String msg) {
-		logger.debug("Enviando mensagem'" + msg + "' para o servidor");
+	public boolean enviarTexto(String msg) {
+		logger.debug("Enviando mensagem '" + msg + "' para o servidor");
 
 		Mensagem msgObj = new MensagemBuilder().mensagem(msg)
 											   .semErro()
 											   .criar();
 		
-		GsonUtil.gson().toJson(msgObj, Mensagem.class, jsonWriter);
-		
+		return enviar(msgObj);
+	}
+
+	private boolean enviar(Mensagem msgObj) {
 		try {
-			jsonWriter.flush();
+			String json = GsonUtil.gson().toJson(msgObj);
+			System.out.println(GsonUtil.gson().toJson(msgObj));
+			Mensagem obj2 = GsonUtil.gson().fromJson(json, Mensagem.class);
+			System.out.println(GsonUtil.gson().toJson(obj2));
+			
+			JsonWriter writer = GsonUtil.criarJsonWriter(clientSocket);
+			
+			GsonUtil.gson().toJson(obj2, Mensagem.class, writer);
+			
+			writer.flush();
 		} catch (IOException e) {
 			logger.error("Erro ao enviar mensagem");
 			
