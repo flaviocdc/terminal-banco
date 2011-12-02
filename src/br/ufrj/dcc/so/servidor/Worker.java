@@ -22,6 +22,7 @@ public class Worker extends Thread {
 	
 	private boolean autenticado;
 	private Usuario usuarioAtual;
+	private GerenciadorComandos gerenciadorComandos;
 	
 	public Worker(int paramClientId, Socket paramClientSocket) {
 		clientId = paramClientId;
@@ -66,6 +67,7 @@ public class Worker extends Thread {
 							logger.debug("Autenticado!");
 							
 							usuarioAtual.logou();
+							gerenciadorComandos = new GerenciadorComandos(usuarioAtual);
 							
 							enviarMensagem(new MensagemBuilder().semErro().comando("authreply").mensagem("Autenticacao foi feita com sucesso!").criar());
 						} else {
@@ -80,7 +82,7 @@ public class Worker extends Thread {
 				}
 				
 				try {
-					Mensagem resposta = interpretarMensagem(msg);
+					Mensagem resposta = gerenciadorComandos.interpretarMensagem(msg);
 					enviarMensagem(resposta);
 				} catch (OperacaoFinanceiraException e) {
 					enviarMensagem(new MensagemBuilder().comErro().comando("operacaofinanceira").mensagem(e.getMessage()).criar());
@@ -95,44 +97,6 @@ public class Worker extends Thread {
 		}
 		
 		terminar();
-	}
-
-	private Mensagem interpretarMensagem(Mensagem msg) throws OperacaoFinanceiraException {
-		GerenciadorConta gerenciador = new GerenciadorConta(usuarioAtual);
-		
-		MensagemBuilder builder = new MensagemBuilder().semErro().comando("cmdreply").mensagem("Operação realizada!");
-		
-		String cmd = msg.param("cmd");
-		Double valor = msg.param("valor", Double.class);
-		
-		if (cmd.equals("deposito")) {
-			gerenciador.efetuarDeposito(valor);
-			
-			builder.mensagem("Deposito realizado com sucesso!");
-		} else if (cmd.equals("doc")) {
-			String banco = msg.param("banco");
-			String agencia = msg.param("agencia");
-			String conta = msg.param("conta");
-			
-			gerenciador.efetuarDOC(banco, agencia, conta, valor);
-			
-			builder.mensagem("DOC efetuado com sucesso!");
-		} else if (cmd.equals("saque")) {
-			gerenciador.efetuarSaque(valor);
-			
-			builder.mensagem("Saque efetuado com sucesso!");
-		} else if (cmd.equals("transferencia")) {
-			String agencia = msg.param("agencia");
-			String conta = msg.param("conta");
-			
-			gerenciador.efetuarTransferencia(agencia, conta, valor);
-			
-			builder.mensagem("Transferencia efetuada com sucesso!");
-		} else if (cmd.equals("saldo")) {
-			builder.mensagem("Saldo atual: " + usuarioAtual.saldo());
-		}
-		
-		return builder.criar();
 	}
 
 	private void enviarMensagem(Mensagem msgObj) throws IOException {
