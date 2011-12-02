@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.log4j.Logger;
 
 import br.ufrj.dcc.so.modelo.OperacaoFinaceira;
 import br.ufrj.dcc.so.modelo.OperacaoFinaceira.Tipo;
@@ -17,6 +18,8 @@ import br.ufrj.dcc.so.servidor.exceptions.SaldoInsuficienteException;
 
 public class GerenciadorConta {
 
+	private static final Logger logger = Logger.getLogger(GerenciadorConta.class);
+	
 	private Usuario usuario;
 
 	public GerenciadorConta(Usuario usuario) {
@@ -28,12 +31,18 @@ public class GerenciadorConta {
 	}
 
 	public void garantirSaldoSuficiente(double valor) throws SaldoInsuficienteException {
+		logger.debug("Gerantindo saldo suficiente");
+		
 		if (!verificarSaldo(valor)) {
 			throw new SaldoInsuficienteException("Sem saldo para fazer operação");
 		}
+		
+		logger.debug("Saldo disponivel, continuar!");
 	}
 	
 	public void efetuarTransferencia(String agencia, String conta, double valor) throws OperacaoFinanceiraException {
+		logger.debug("Comecando a efetuar transferencia");
+		
 		garantirSaldoSuficiente(valor);
 		
 		List<OperacaoFinaceira> transferencias = usuario.recuperarTransferencias();
@@ -53,10 +62,13 @@ public class GerenciadorConta {
 		
 		usuario.adicionarOperacao(new OperacaoFinaceira(Tipo.TRANSFERENCIA, valor));
 		
+		logger.debug("Transferido!");
 		// TODO colocar o dinheiro na conta do outro usuario
 	}
 	
 	public void efetuarDOC(String banco, String agencia, String conta, double valor) throws OperacaoFinanceiraException {
+		logger.debug("Comecando a efetuando DOC");
+		
 		if (valor > usuario.getLimitePorDOC()) {
 			throw new LimitePorDOCException(usuario.getLimitePorDOC());
 		}
@@ -65,9 +77,13 @@ public class GerenciadorConta {
 		
 		usuario.adicionarOperacao(new OperacaoFinaceira(Tipo.DOC, valor));
 		usuario.adicionarOperacao(new OperacaoFinaceira(Tipo.TARIFA_SERVICO, 10.0));
+		
+		logger.debug("DOC efetuado!");
 	}
 	
 	public void efetuarSaque(double valor) throws OperacaoFinanceiraException {
+		logger.debug("Comecando a efetuar saque!");
+		
 		garantirSaldoSuficiente(valor);
 		
 		List<OperacaoFinaceira> saques = usuario.recuperarSaques();
@@ -93,9 +109,15 @@ public class GerenciadorConta {
 		}
 		
 		usuario.adicionarOperacao(new OperacaoFinaceira(Tipo.SAQUE, valor));
+		
+		logger.debug("Saque realizado!");
 	}
 	
 	public void efetuarDeposito(double valor) {
+		logger.debug("Comecando a efetuar deposito!");
+		
 		usuario.adicionarOperacao(new OperacaoFinaceira(Tipo.DEPOSITO, valor));
+		
+		logger.debug("Deposito efetuado!");
 	}
 }
