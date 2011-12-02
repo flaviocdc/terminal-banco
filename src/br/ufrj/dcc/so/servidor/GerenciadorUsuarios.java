@@ -1,9 +1,12 @@
 package br.ufrj.dcc.so.servidor;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 
@@ -12,6 +15,7 @@ import br.ufrj.dcc.so.util.GsonUtil;
 
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
 public class GerenciadorUsuarios {
 
@@ -21,6 +25,7 @@ public class GerenciadorUsuarios {
 	private static GerenciadorUsuarios instance;
 	
 	private Map<String, Usuario> usuarios;
+	private Lock writeLock = new ReentrantLock();
 	
 	private GerenciadorUsuarios() {
 	}
@@ -63,6 +68,23 @@ public class GerenciadorUsuarios {
 			}
 			
 			return instance;
+		}
+	}
+
+	public void salvar() throws IOException {
+		try {
+			writeLock.lock();
+			logger.debug("Salvando dados de usuario!");
+			
+			JsonWriter writer = new JsonWriter(new FileWriter("users.json"));
+			
+			GsonUtil.gson().toJson(usuarios, typeToken.getType(), writer);
+			
+			writer.flush();
+			writer.close();
+		} finally {
+			logger.debug("Dados salvos");
+			writeLock.unlock();
 		}
 	}
 }
