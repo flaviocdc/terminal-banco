@@ -9,4 +9,6 @@ public abstract class Opcao {
 	
 	public abstract void receberParametros();
 	public abstract Mensagem gerarMensagem();
+	
+	public abstract String getNomeDescritivo();
 }

@@ -36,4 +36,9 @@ public class OpcaoDOC extends Opcao {
 									.param("valor", valor)
 									.criar();
 	}
+
+	@Override
+	public String getNomeDescritivo() {
+		return "Efetuar DOC";
+	}
 }

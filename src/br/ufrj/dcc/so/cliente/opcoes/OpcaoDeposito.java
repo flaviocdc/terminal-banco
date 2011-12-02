@@ -21,4 +21,9 @@ public class OpcaoDeposito extends Opcao {
 									.param("valor", valor)
 									.criar();
 	}
+
+	@Override
+	public String getNomeDescritivo() {
+		return "Efetuar Depósito";
+	}
 }

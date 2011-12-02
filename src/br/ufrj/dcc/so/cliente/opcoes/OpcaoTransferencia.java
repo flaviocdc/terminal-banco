@@ -31,4 +31,9 @@ public class OpcaoTransferencia extends Opcao {
 									.param("valor", valor)
 									.criar();
 	}
+
+	@Override
+	public String getNomeDescritivo() {
+		return "Efetuar transferência";
+	}
 }

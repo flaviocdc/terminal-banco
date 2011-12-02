@@ -18,8 +18,12 @@ public class OpcaoSaque extends Opcao {
 		return new MensagemBuilder().semErro()
 									.mensagem("Saque")
 									.comando("saque")
-									.param("cmd", "transferencia")
 									.param("valor", valor)
 									.criar();
+	}
+
+	@Override
+	public String getNomeDescritivo() {
+		return "Efetuar Saque";
 	}
 }
