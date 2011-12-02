@@ -61,7 +61,8 @@ public class Cliente {
 		if (!clientSocket.isConnected())
 			return;
 		
-		recuperarInformacoesLogin();
+		// recuperarInformacoesLogin(); // TODO voltar com isso!
+		agencia = "1234-0"; conta = "0000-1"; senha = "123456"; // TODO temporario!
 		
 		Mensagem loginMsg = new MensagemBuilder().semErro()
     										  .comando("login")
