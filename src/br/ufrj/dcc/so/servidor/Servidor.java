@@ -18,6 +18,17 @@ public class Servidor {
 	public static void main(String[] args) {
 		Servidor servidor = new Servidor();
 		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				try {
+					GerenciadorUsuarios.instance().salvar();
+				} catch (IOException e) {
+					logger.error("Erro ao tentar salvar dados de usuario", e);
+				}
+			}
+		});
+		
 		try {
 			servidor.init();
 			servidor.loop();
