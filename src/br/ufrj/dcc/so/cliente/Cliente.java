@@ -3,6 +3,7 @@ package br.ufrj.dcc.so.cliente;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
@@ -21,6 +22,10 @@ public class Cliente {
 	
 	private boolean ocorreuErro = false;
 	private boolean desligar = false;
+	
+	private String agencia;
+	private String conta;
+	private String senha;
 	
 	private CLI cli = new CLI();
 	
@@ -43,14 +48,29 @@ public class Cliente {
 		}
 	}
 	
+	private void recuperarInformacoesLogin() {
+		Scanner in = new Scanner(System.in);
+		
+		cli.exibirMensagem("Digite sua agencia:");
+		agencia = in.nextLine();
+		
+		cli.exibirMensagem("Digite sua conta:");
+		conta = in.nextLine();
+		
+		cli.exibirMensagem("Digite a senha");
+		senha = in.nextLine();
+	}
+	
 	private void loop() {
+		
+		recuperarInformacoesLogin();
 		
 		Mensagem loginMsg = new MensagemBuilder().semErro()
     										  .comando("login")
 											  .mensagem("Autenticar")
-											  .param("agencia", "1234-0")
-											  .param("conta", "0000-1")
-											  .param("senha", "123456")
+											  .param("agencia", agencia)
+											  .param("conta", conta)
+											  .param("senha", senha)
 											  .criar();
 		
 		enviar(loginMsg);
