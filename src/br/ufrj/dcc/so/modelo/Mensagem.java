@@ -32,8 +32,13 @@ public class Mensagem {
 		this.parametros = parametros;
 	}
 	
-	public String param(String param) {
-		return (String) parametros.get(param);
+	@SuppressWarnings("unchecked")
+	public <T> T param(String key, Class<T> clazz) {
+		return (T) parametros.get(key);
+	}
+	
+	public String param(String key) {
+		return param(key, String.class);
 	}
 
 	@Override
