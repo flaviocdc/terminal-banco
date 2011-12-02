@@ -1,5 +1,6 @@
 package br.ufrj.dcc.so.modelo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,12 +8,17 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.apache.log4j.Logger;
+
 import br.ufrj.dcc.so.modelo.OperacaoFinaceira.Tipo;
+import br.ufrj.dcc.so.servidor.GerenciadorUsuarios;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
 public class Usuario {
+	
+	private static final Logger logger = Logger.getLogger(Usuario.class);
 
 	private String nome;
 	
@@ -130,14 +136,24 @@ public class Usuario {
 			inicializarOperacaoes();
 			
 			operacoes.add(op);
+			
+			salvarDados();
 		} finally {
 			lock.unlock();
 		}
 	}
 
-	public void inicializarOperacaoes() {
+	private void inicializarOperacaoes() {
 		if (operacoes == null)
 			operacoes = new ArrayList<OperacaoFinaceira>();
+	}
+	
+	private void salvarDados() {
+		try {
+			GerenciadorUsuarios.instance().salvar();
+		} catch (IOException e) {
+			logger.debug("Erro ao tentar salvar dados dos usuarios", e);
+		}
 	}
 	
 	public List<OperacaoFinaceira> recuperarDOCs() {
@@ -156,7 +172,7 @@ public class Usuario {
 		return recuperarPorTipo(Tipo.DEPOSITO);
 	}
 	
-	public List<OperacaoFinaceira> recuperarPorTipo(final Tipo tipo) {
+	private List<OperacaoFinaceira> recuperarPorTipo(final Tipo tipo) {
 		try {
 			lock.lock();
 		
