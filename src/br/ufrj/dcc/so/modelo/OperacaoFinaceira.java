@@ -16,6 +16,10 @@ public class OperacaoFinaceira {
 		private Tipo(boolean negativo) {
 			this.negativo = negativo;
 		}
+		
+		public boolean negativo() {
+			return negativo;
+		}
 	}
 	
 	private Date data;
