@@ -89,7 +89,8 @@ public class Cliente {
 			boolean enviado = enviar(msg);
 			
 			if (enviado) {
-				receber();
+				msg = receber();
+				cli.exibirMensagem(msg.param("msg"));
 			}
 		}
 		
