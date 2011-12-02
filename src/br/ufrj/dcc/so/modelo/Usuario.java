@@ -111,6 +111,8 @@ public class Usuario {
 		try {
 			lock.lock();
 			
+			inicializarOperacaoes();
+			
 			double saldo = 0.0;
 			for (OperacaoFinaceira op : operacoes) {
 				saldo += op.getValor();
@@ -125,13 +127,17 @@ public class Usuario {
 		try {
 			lock.lock();
 			
-			if (operacoes == null)
-				operacoes = new ArrayList<OperacaoFinaceira>();
+			inicializarOperacaoes();
 			
 			operacoes.add(op);
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	public void inicializarOperacaoes() {
+		if (operacoes == null)
+			operacoes = new ArrayList<OperacaoFinaceira>();
 	}
 	
 	public List<OperacaoFinaceira> recuperarDOCs() {
@@ -165,5 +171,21 @@ public class Usuario {
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	public double getLimiteTransferencias() {
+		return 5000.0;
+	}
+
+	public double getLimitePorDOC() {
+		return 3000.0;
+	}
+
+	public int getLimiteQuantidadeDeSaques() {
+		return 3;
+	}
+
+	public double getLimiteSaques() {
+		return 2000.0;
 	}
 }

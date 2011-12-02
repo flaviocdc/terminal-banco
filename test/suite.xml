@@ -1,0 +1,7 @@
+<suite name="Trabalho 3 - Suite de testes">
+  <test name="Unit tests">
+    <packages>
+      <package name="br.ufrj.dcc.so.*" />
+   	</packages>
+  </test>
+</suite>

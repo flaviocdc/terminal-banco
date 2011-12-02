@@ -5,7 +5,7 @@ import java.util.Date;
 public class OperacaoFinaceira {
 
 	public enum Tipo {
-		TRANSFERENCIA(true), DOC(true), SAQUE(true), DEPOSITO, DESCONHECIDO;
+		TRANSFERENCIA(true), DOC(true), SAQUE(true), DEPOSITO, TARIFA_SERVICO(true), DESCONHECIDO;
 		
 		private boolean negativo = false;
 		
