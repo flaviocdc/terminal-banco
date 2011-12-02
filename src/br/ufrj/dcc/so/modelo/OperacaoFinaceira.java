@@ -24,11 +24,12 @@ public class OperacaoFinaceira {
 	
 	public OperacaoFinaceira(Tipo tipo, double valor) {
 		this.tipo = tipo;
-		this.valor = valor;
 		this.data = new Date();
 		
-		if (tipo.negativo && valor > 0.0) {
-			throw new IllegalStateException(tipo + " deve possuir valores negativos");
+		if (tipo.negativo) {
+			this.valor = -valor;
+		} else {
+			this.valor = valor;
 		}
 	}
 	

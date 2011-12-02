@@ -14,9 +14,9 @@ public class UsuarioUnitTest {
 	@Test
 	public void testRecuperarOperacoesPorTipo() {
 		OperacaoFinaceira[] opsArray = {
-				new OperacaoFinaceira(Tipo.DOC, -10.0),
-				new OperacaoFinaceira(Tipo.TRANSFERENCIA, -10.0),
-				new OperacaoFinaceira(Tipo.SAQUE, -10.0),
+				new OperacaoFinaceira(Tipo.DOC, 10.0),
+				new OperacaoFinaceira(Tipo.TRANSFERENCIA, 10.0),
+				new OperacaoFinaceira(Tipo.SAQUE, 10.0),
 				new OperacaoFinaceira(Tipo.DEPOSITO, 10.0)
 		};
 		
@@ -58,8 +58,8 @@ public class UsuarioUnitTest {
 		OperacaoFinaceira[] opsArray = {
 				new OperacaoFinaceira(Tipo.DEPOSITO, 10.0),
 				new OperacaoFinaceira(Tipo.DEPOSITO, 20.0),
-				new OperacaoFinaceira(Tipo.DOC, -20.0),
-				new OperacaoFinaceira(Tipo.SAQUE, -10.0)
+				new OperacaoFinaceira(Tipo.DOC, 20.0),
+				new OperacaoFinaceira(Tipo.SAQUE, 10.0)
 		};
 		
 		List<OperacaoFinaceira> ops = Arrays.asList(opsArray);

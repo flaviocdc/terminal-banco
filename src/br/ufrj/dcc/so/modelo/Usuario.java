@@ -125,6 +125,9 @@ public class Usuario {
 		try {
 			lock.lock();
 			
+			if (operacoes == null)
+				operacoes = new ArrayList<OperacaoFinaceira>();
+			
 			operacoes.add(op);
 		} finally {
 			lock.unlock();
