@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import br.ufrj.dcc.so.cliente.opcoes.Opcao;
 import br.ufrj.dcc.so.cliente.opcoes.OpcaoDOC;
 import br.ufrj.dcc.so.cliente.opcoes.OpcaoDeposito;
+import br.ufrj.dcc.so.cliente.opcoes.OpcaoSaldo;
 import br.ufrj.dcc.so.cliente.opcoes.OpcaoSaque;
 import br.ufrj.dcc.so.cliente.opcoes.OpcaoTransferencia;
 import br.ufrj.dcc.so.modelo.Mensagem;
@@ -21,7 +22,8 @@ public class CLI {
 		OpcaoTransferencia.class,
 		OpcaoDOC.class,
 		OpcaoSaque.class,
-		OpcaoDeposito.class
+		OpcaoDeposito.class,
+		OpcaoSaldo.class
 	};
 	
 	public static void console(String line) {
@@ -35,6 +37,7 @@ public class CLI {
 		console("2) DOC");
 		console("3) Saque");
 		console("4) Deposito");
+		console("5) Saldo");
 		
 		console("Escolha a opção...");
 	}
