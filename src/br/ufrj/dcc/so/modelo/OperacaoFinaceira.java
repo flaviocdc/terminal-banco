@@ -26,6 +26,9 @@ public class OperacaoFinaceira {
 		this.tipo = tipo;
 		this.data = new Date();
 		
+		if (valor < 0.0)
+			throw new IllegalStateException("'valor' nao pode ser negativo (gerenciado automaticamente)");
+		
 		if (tipo.negativo) {
 			this.valor = -valor;
 		} else {

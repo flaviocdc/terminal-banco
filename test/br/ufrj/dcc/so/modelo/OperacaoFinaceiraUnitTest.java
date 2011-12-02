@@ -26,4 +26,8 @@ public class OperacaoFinaceiraUnitTest {
 		assertEquals(op.getValor(), -10.0);
 	}
 	
+	@Test(expectedExceptions = IllegalStateException.class)
+	public void testOperacoes_Nao_Podem_Ter_Valores_Negativos() {
+		new OperacaoFinaceira(Tipo.TRANSFERENCIA, -10.0);
+	}
 }
