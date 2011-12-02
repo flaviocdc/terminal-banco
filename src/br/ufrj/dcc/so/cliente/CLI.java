@@ -2,11 +2,11 @@ package br.ufrj.dcc.so.cliente;
 
 import java.util.Scanner;
 
-import org.apache.log4j.Logger;
-
 import br.ufrj.dcc.so.cliente.opcoes.Opcao;
 import br.ufrj.dcc.so.cliente.opcoes.OpcaoDOC;
 import br.ufrj.dcc.so.cliente.opcoes.OpcaoDeposito;
+import br.ufrj.dcc.so.cliente.opcoes.OpcaoExtrato;
+import br.ufrj.dcc.so.cliente.opcoes.OpcaoSair;
 import br.ufrj.dcc.so.cliente.opcoes.OpcaoSaldo;
 import br.ufrj.dcc.so.cliente.opcoes.OpcaoSaque;
 import br.ufrj.dcc.so.cliente.opcoes.OpcaoTransferencia;
@@ -14,16 +14,16 @@ import br.ufrj.dcc.so.modelo.Mensagem;
 
 public class CLI {
 
-	private static final Logger logger = Logger.getLogger(CLI.class);
-	
 	private Scanner in = new Scanner(System.in);
 
-	private static Class<?>[] opcoes = {
-		OpcaoTransferencia.class,
-		OpcaoDOC.class,
-		OpcaoSaque.class,
-		OpcaoDeposito.class,
-		OpcaoSaldo.class
+	private static Opcao[] opcoes = {
+		new OpcaoTransferencia(),
+		new OpcaoDOC(),
+		new OpcaoSaque(),
+		new OpcaoDeposito(),
+		new OpcaoSaldo(),
+		new OpcaoExtrato(),
+		new OpcaoSair()
 	};
 	
 	public static void console(String line) {
@@ -33,11 +33,9 @@ public class CLI {
 	private void exibirMenu() {
 		console("Escolha uma opção:");
 		
-		console("1) Transferencia");
-		console("2) DOC");
-		console("3) Saque");
-		console("4) Deposito");
-		console("5) Saldo");
+		for (int i = 0; i < opcoes.length; i++) {
+			console((i+1) + ") " + opcoes[i].getNomeDescritivo());
+		}
 		
 		console("Escolha a opção...");
 	}
@@ -47,7 +45,7 @@ public class CLI {
 		
 		int opcaoindex = in.nextInt();
 		
-		Opcao opcao = instanciarOpcao(opcaoindex);
+		Opcao opcao = opcoes[opcaoindex - 1];
 		
 		opcao.receberParametros();
 		return opcao.gerarMensagem();		
@@ -55,16 +53,5 @@ public class CLI {
 	
 	public void exibirMensagem(String msg) {
 		console(msg);
-	}
-	
-	private static Opcao instanciarOpcao(int opcao) {
-		Class<?> clazz = opcoes[opcao - 1];
-		
-		try {
-			return (Opcao) clazz.newInstance();
-		} catch (Exception e) {
-			logger.debug("Impossivel executar opcao " + opcao, e);
-			return null;
-		}
 	}
 }
