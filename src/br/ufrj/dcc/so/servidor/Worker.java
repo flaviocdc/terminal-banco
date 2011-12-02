@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import br.ufrj.dcc.so.modelo.Mensagem;
 import br.ufrj.dcc.so.modelo.MensagemBuilder;
 import br.ufrj.dcc.so.modelo.Usuario;
+import br.ufrj.dcc.so.servidor.exceptions.OperacaoFinanceiraException;
 import br.ufrj.dcc.so.util.GsonUtil;
 
 import com.google.gson.stream.JsonWriter;
@@ -54,6 +55,13 @@ public class Worker extends Thread {
 						autenticado = GerenciadorUsuarios.instance().verificarSenha(agencia, conta, senha);
 						usuarioAtual = GerenciadorUsuarios.instance().recuperarUsuario(agencia, conta);
 						
+						if (!autenticado || usuarioAtual == null) {
+							logger.debug("Usuario inexistente ou senha errada!");
+							enviarMensagem(new MensagemBuilder().comErro().comando("baduserpass").mensagem("Autenticacao falhou!").criar());
+							
+							break;
+						}
+						
 						if (usuarioAtual.podeLogar()) {
 							logger.debug("Autenticado!");
 							
@@ -67,11 +75,19 @@ public class Worker extends Thread {
 						continue;
 					} else {
 						enviarMensagem(new MensagemBuilder().comErro().comando("authfail").mensagem("Nao autenticado, logar primeiro").criar());
-						continue;
+						break;
 					}
 				}
 				
-				enviarMensagem(new MensagemBuilder().semErro().comando("cmdreply").mensagem("Mensagem recebida").criar());
+				try {
+					interpretarMensagem(msg);
+					enviarMensagem(new MensagemBuilder().semErro().comando("cmdreply").mensagem("Operação realizada!").criar());
+				} catch (OperacaoFinanceiraException e) {
+					enviarMensagem(new MensagemBuilder().comErro().comando("operacaofinanceira").mensagem(e.getMessage()).criar());
+					
+					logger.debug(e);
+				}
+				
 			} catch (IOException e) {
 				logger.error("Erro ao ler mensagem", e);
 				break;
@@ -79,6 +95,30 @@ public class Worker extends Thread {
 		}
 		
 		terminar();
+	}
+
+	private void interpretarMensagem(Mensagem msg) throws OperacaoFinanceiraException {
+		GerenciadorConta gerenciador = new GerenciadorConta(usuarioAtual);
+		
+		String cmd = msg.param("cmd");
+		double valor = msg.param("valor", Double.class);
+		
+		if (cmd.equals("deposito")) {
+			gerenciador.efetuarDeposito(valor);
+		} else if (cmd.equals("doc")) {
+			String banco = msg.param("banco");
+			String agencia = msg.param("agencia");
+			String conta = msg.param("conta");
+			
+			gerenciador.efetuarDOC(banco, agencia, conta, valor);			
+		} else if (cmd.equals("saque")) {
+			gerenciador.efetuarSaque(valor);
+		} else if (cmd.equals("transferencia")) {
+			String agencia = msg.param("agencia");
+			String conta = msg.param("conta");
+			
+			gerenciador.efetuarTransferencia(agencia, conta, valor);
+		}
 	}
 
 	private void enviarMensagem(Mensagem msgObj) throws IOException {
