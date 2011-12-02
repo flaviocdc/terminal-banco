@@ -1,6 +1,8 @@
 package br.ufrj.dcc.so.modelo;
 
-import static junit.framework.Assert.assertEquals;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -68,6 +70,23 @@ public class UsuarioUnitTest {
 		usuario.setOperacoes(ops);
 		
 		assertEquals(usuario.saldo(), 0.0);
+	}
+	
+	@Test
+	public void testContadorLogin() {
+		Usuario u = new Usuario();
+		
+		assertTrue(u.podeLogar());
+		
+		u.logou();
+		
+		assertFalse(u.podeLogar());
+		assertEquals(u.contadorLogin, 1);
+		
+		u.deslogou();
+		
+		assertTrue(u.podeLogar());
+		assertEquals(u.contadorLogin, 0);
 	}
 	
 }

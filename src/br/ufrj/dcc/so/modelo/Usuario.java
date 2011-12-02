@@ -21,7 +21,7 @@ public class Usuario {
 	private String senha;
 	
 	private transient Lock lock = new ReentrantLock();
-	private transient int contadorLogin = 0;
+	protected transient int contadorLogin = 0;
 	
 	private List<OperacaoFinaceira> operacoes;
 
