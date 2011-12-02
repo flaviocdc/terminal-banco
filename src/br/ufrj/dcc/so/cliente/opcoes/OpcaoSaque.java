@@ -5,12 +5,12 @@ import br.ufrj.dcc.so.modelo.Mensagem;
 import br.ufrj.dcc.so.modelo.MensagemBuilder;
 
 public class OpcaoSaque extends Opcao {
-	private float valor;
+	private double valor;
 	
 	@Override
 	public void receberParametros() {
 		CLI.console("Digite o valor:");
-		valor = in.nextFloat();
+		valor = in.nextDouble();
 	}
 
 	@Override

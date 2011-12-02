@@ -7,7 +7,7 @@ import br.ufrj.dcc.so.modelo.MensagemBuilder;
 public class OpcaoTransferencia extends Opcao {
 	private String agencia;
 	private String conta;
-	private float valor;
+	private double valor;
 	
 	@Override
 	public void receberParametros() {
@@ -18,7 +18,7 @@ public class OpcaoTransferencia extends Opcao {
 		conta = in.nextLine();
 		
 		CLI.console("Digite o valor:");
-		valor = in.nextFloat();
+		valor = in.nextDouble();
 	}
 
 	@Override
