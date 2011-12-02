@@ -10,12 +10,10 @@ import org.apache.log4j.Logger;
 import br.ufrj.dcc.so.modelo.Mensagem;
 import br.ufrj.dcc.so.modelo.MensagemBuilder;
 import br.ufrj.dcc.so.util.GsonUtil;
-import br.ufrj.dcc.so.util.LoggerUtil;
 
 import com.google.gson.stream.JsonWriter;
 
 public class Cliente {
-
 	private static final Logger logger = Logger.getLogger(Cliente.class);
 	
 	private Socket clientSocket;
@@ -30,8 +28,6 @@ public class Cliente {
 	private CLI cli = new CLI();
 	
 	public static void main(String[] args) {
-		LoggerUtil.initLog4j();
-		
 		Cliente cliente = new Cliente();
 		
 		cliente.init();
@@ -44,7 +40,7 @@ public class Cliente {
 		try {
 			clientSocket.connect(new InetSocketAddress("0.0.0.0", 1234));
 		} catch (IOException e) {
-			logger.debug("Erro ao inicializar a conexao", e);
+			logger.error("Erro ao inicializar a conexao", e);
 		}
 	}
 	
@@ -62,6 +58,8 @@ public class Cliente {
 	}
 	
 	private void loop() {
+		if (!clientSocket.isConnected())
+			return;
 		
 		recuperarInformacoesLogin();
 		
